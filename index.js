@@ -16,7 +16,14 @@ app.use(bodyParser.json());
 
 app.use(cors());
 // Serve static files from the 'uploads' folder
-app.use("/uploads", express.static("uploads"));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
+  setHeaders: (res, filePath) => {
+    const mimeType = require('mime-types').lookup(filePath);
+    if (mimeType) {
+      res.setHeader('Content-Type', mimeType);
+    }
+  }
+}));
 
 const dbName = "test";
 
